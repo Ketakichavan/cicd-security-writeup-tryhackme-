@@ -3,7 +3,6 @@
 Writeup covering Kubernetes fundamentals, hands-on cluster interaction with `kubectl`, and a practical walkthrough of Kubernetes security hardening using RBAC (Role-Based Access Control).
 
 **Environment:** Browser-based AttackBox, Minikube cluster
-**TryHackMe username:** Ketaki2004
 
 ---
 
@@ -42,7 +41,8 @@ A follow-up check confirms the pod is running:
 kubectl get pods -A
 ```
 
-**📸 Screenshot 1:** `kubectl get pods -A` output showing the `nginx-deployment` pod in `Running` state, along with the two apply confirmations above it.
+<img width="1301" height="650" alt="01-deployment-and-pods-running" src="https://github.com/user-attachments/assets/cd6e8681-77c2-4ecf-a445-5514d8aaebfd" />
+
 
 ---
 
@@ -54,11 +54,13 @@ kubectl get pods -A
 kubectl port-forward service/nginx-service 8090:8080
 ```
 
-**📸 Screenshot 2:** Terminal output of the `port-forward` command showing the forwarding confirmation.
+<img width="1140" height="125" alt="02-port-forward" src="https://github.com/user-attachments/assets/ea66a658-2345-464a-9b0e-e30bee9e3f18" />
+
 
 Navigating to `http://localhost:8090/` brings up a themed login page — "Jurassic Land Terminal Access" — asking for credentials.
 
-**📸 Screenshot 3:** Browser view of the login page, before any credentials are entered.
+<img width="1302" height="815" alt="03-login-page-empty" src="https://github.com/user-attachments/assets/32e13608-de17-4863-b188-ea29ce7b6598" />
+
 
 A check for Kubernetes Secrets in the default namespace turns up something useful:
 
@@ -74,11 +76,13 @@ kubectl get secret terminal-creds -o jsonpath='{.data.username}' | base64 --deco
 kubectl get secret terminal-creds -o jsonpath='{.data.password}' | base64 --decode
 ```
 
-**📸 Screenshot 4:** Terminal showing the secret discovery and decode commands — **blur or black out the decoded username and password** before publishing.
+<img width="1302" height="721" alt="04-secret-discovery-decode-REDACTED" src="https://github.com/user-attachments/assets/0b7a1c8d-801c-413b-a574-bc7bbe82cffe" />
+
 
 The decoded credentials are used to log into the terminal application, and the flag is retrieved.
 
-**📸 Screenshot 5:** Browser view of the successful login/flag page — **blur the flag value**.
+<img width="1302" height="656" alt="05-login-submitted-REDACTED" src="https://github.com/user-attachments/assets/0c99e1eb-36e5-43e8-bba9-0e86c3ba0bbd" />
+
 
 **Flag:** `THM{REDACTED}`
 
@@ -137,7 +141,8 @@ kubectl apply -f role.yaml
 kubectl apply -f role-binding.yaml
 ```
 
-**📸 Screenshot 6:** Terminal showing `cat role.yaml`, `cat role-binding.yaml`, and both service account creation commands.
+<img width="900" height="390" alt="06-rbac-role-config-and-sa-creation" src="https://github.com/user-attachments/assets/3fb7f48b-0f85-4f38-93fb-f33a8cc2d626" />
+
 
 ### Verification
 
@@ -153,7 +158,8 @@ kubectl auth can-i get secret/terminal-creds --as=system:serviceaccount:default:
 
 `terminal-user` is correctly denied, while `terminal-admin` keeps the access it needs — confirming least-privilege access is now in place on the `terminal-creds` secret.
 
-**📸 Screenshot 7:** Terminal showing both `apply` confirmations and both `kubectl auth can-i` results (no / yes) together.
+<img width="1305" height="570" alt="07-rbac-apply-and-verification" src="https://github.com/user-attachments/assets/432faab8-c050-425a-99ab-e526db72ac86" />
+
 
 ---
 
